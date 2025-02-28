@@ -23,14 +23,6 @@ else:
 
 @st.cache_data
 def load_data(file):
-    try:
-        df = pd.read_csv(file, delimiter=';', encoding='utf-8-sig')
-        if df.empty:
-            st.error("Nahraný soubor je prázdný. Nahrajte platný CSV soubor.")
-            st.stop()
-    except pd.errors.EmptyDataError:
-        st.error("Soubor je prázdný nebo neplatný. Nahrajte prosím platný CSV soubor.")
-        st.stop()
     df.rename(columns={
         "Date": "Datum",
         "SiteName": "Místo pozorování",
