@@ -39,7 +39,7 @@ def load_data(file):
     df["Počet"] = df["Počet"].astype(int)
     return df
 
-#df = None
+df = None
 
 
 # ------------------
