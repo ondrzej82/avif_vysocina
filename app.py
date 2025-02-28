@@ -15,14 +15,15 @@ import os
 st.set_page_config(page_title="Avif statistika", layout="wide")
 
                    
-# Zajištění individuálního souboru CSV pro každého uživatele
-if "file_path" not in st.session_state:
-    st.session_state["file_path"] = "pozorovani.csv"
-
-uploaded_file = st.file_uploader("Nahrajte soubor CSV", type=["csv"])
-
-if uploaded_file is not None:
-    file_path = uploaded_file
+if "df" not in st.session_state:
+    if uploaded_file is not None:
+        st.session_state.df = load_data(uploaded_file)
+    elif os.path.exists("pozorovani.csv"):
+        st.session_state.df = load_data("pozorovani.csv")
+    else:
+        st.warning("Prosím nahrajte soubor CSV, než aplikace začne pracovat.")
+        st.stop()
+df = st.session_state.df
 else:
     file_path = "pozorovani.csv"
 
@@ -84,9 +85,9 @@ species_column = "SpeciesName"  # Sloupec s názvem druhu
 activity_column = "Activity"     # Sloupec s aktivitou
 
 # 1) Filtr druhu
-species_list = ["Vyber", "Vše"]
+species_list = ["Vyber"]
 if df is not None and not df.empty and species_column in df.columns:
-    species_list = ["Vyber", "Vše"] + sorted(set(df[species_column].dropna().unique()))
+    species_list = ["Vyber"] + sorted(set(df[species_column].dropna().unique()))
 selected_species = st.selectbox("Vyber druh ptáka:", species_list)
 
 # 2) Filtr data
