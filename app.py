@@ -20,7 +20,7 @@ st.set_page_config(page_title="Avif statistika", layout="wide")
 
 FILE_PATH = "uploaded_file.csv"
 
-#uploaded_file = st.file_uploader("Nahrajte soubor CSV", type=["csv"])
+uploaded_file = st.file_uploader("Nahrajte soubor CSV", type=["csv"])
 
 if uploaded_file is not None:
     # Uložíme soubor na disk
