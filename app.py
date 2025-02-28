@@ -239,3 +239,13 @@ filtered_data_display = filtered_data.copy()
 filtered_data_display["Počet"] = filtered_data_display["Počet"].apply(lambda x: 'x' if pd.isna(x) or x == '' else int(x))
 filtered_data_display["Datum"] = filtered_data_display["Datum"].apply(lambda x: x.strftime('%d. %m. %Y') if pd.notna(x) else '')
 st.write(filtered_data_display[["Datum", "Místo pozorování", "Počet", "Odkaz"]].to_html(escape=False), unsafe_allow_html=True)
+
+# Nastavení stránkování
+page_size = 20
+num_pages = len(filtered_data_display) // page_size + (1 if len(filtered_data_display) % page_size > 0 else 0)
+selected_page = st.number_input("Vyberte stránku:", min_value=1, max_value=num_pages, step=1, value=1)
+
+# Zobrazení příslušné stránky
+start_idx = (selected_page - 1) * page_size
+end_idx = start_idx + page_size
+st.write(filtered_data_display.iloc[start_idx:end_idx][["Datum", "Místo pozorování", "Počet", "Odkaz"]].to_html(escape=False), unsafe_allow_html=True)
