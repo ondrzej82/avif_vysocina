@@ -99,11 +99,11 @@ years = sorted(df["Datum"].dropna().dt.year.unique()) if df is not None and not 
 selected_year = st.selectbox("Vyberte rok:", ["Vlastní rozsah"] + years)
 
 if selected_year == "Vlastní rozsah":
-    date_from = st.date_input("Datum od:", date_min, min_value=date_min, max_value=date_max)
-    date_to = st.date_input("Datum do:", date_max, min_value=date_min, max_value=date_max)
+    date_from = st.date_input("Datum od:", date_min, min_value=date_min, max_value=date_max).strftime("%d. %m. %Y")
+    date_to = st.date_input("Datum do:", date_max, min_value=date_min, max_value=date_max).strftime("%d. %m. %Y")
 else:
-    date_from = datetime(selected_year, 1, 1).date()
-    date_to = datetime(selected_year, 12, 31).date()
+    date_from = datetime(selected_year, 1, 1).strftime("%d. %m. %Y")
+    date_to = datetime(selected_year, 12, 31).strftime("%d. %m. %Y")
 
 # 3) Filtr aktivity
 #activity_list = ["Vše"]
