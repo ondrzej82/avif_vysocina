@@ -14,15 +14,28 @@ import os
 # -------------------------
 st.set_page_config(page_title="Avif statistika", layout="wide")
 
+                   
+# Zajištění individuálního souboru CSV pro každého uživatele
+if "file_path" not in st.session_state:
+    st.session_state["file_path"] = "pozorovani.csv"
+
 uploaded_file = st.file_uploader("Nahrajte soubor CSV", type=["csv"])
 
 if uploaded_file is not None:
     file_path = uploaded_file
 else:
-    file_path = "pozorovani.csv"  # Výchozí soubor v repozitáři
+    file_path = "pozorovani.csv"
 
 @st.cache_data
 def load_data(file):
+    try:
+        df = pd.read_csv(file, delimiter=';', encoding='utf-8-sig')
+        if df.empty:
+            st.error("Nahraný soubor je prázdný. Nahrajte platný CSV soubor.")
+            st.stop()
+    except pd.errors.EmptyDataError:
+        st.error("Soubor je prázdný nebo neplatný. Nahrajte prosím platný CSV soubor.")
+        st.stop()
     df.rename(columns={
         "Date": "Datum",
         "SiteName": "Místo pozorování",
@@ -40,7 +53,12 @@ def load_data(file):
     return df
 
 df = None
+if uploaded_file is None and not os.path.exists("pozorovani.csv"):
+    st.warning("Prosím nahrajte soubor CSV, než aplikace začne pracovat.")
+    st.stop()
 
+if uploaded_file is not None or os.path.exists("pozorovani.csv"):
+    df = load_data(file_path)
 
 # ------------------
 # Checkboxy pro zobrazení / skrytí grafů a map (nahoře na stránce)
