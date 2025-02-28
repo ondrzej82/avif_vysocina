@@ -96,22 +96,14 @@ date_min = df["Datum"].min().date() if df is not None and not df.empty else date
 date_max = df["Datum"].max().date() if df is not None and not df.empty else datetime.today().date()
 
 years = sorted(df["Datum"].dropna().dt.year.unique()) if df is not None and not df.empty else []
-year_options = ["Vlastní rozsah"] + [f"{year}" for year in years]
-selected_year = st.selectbox("Vyberte rok:", year_options)
+selected_year = st.selectbox("Vyberte rok:", ["Vlastní rozsah"] + years)
 
 if selected_year == "Vlastní rozsah":
     date_from = st.date_input("Datum od:", date_min, min_value=date_min, max_value=date_max)
     date_to = st.date_input("Datum do:", date_max, min_value=date_min, max_value=date_max)
 else:
-    selected_year = int(selected_year)
     date_from = datetime(selected_year, 1, 1).date()
     date_to = datetime(selected_year, 12, 31).date()
-
-# Konverze data na požadovaný formát pro zobrazení
-formatted_date_from = date_from.strftime("%d. %m. %Y")
-formatted_date_to = date_to.strftime("%d. %m. %Y")
-
-st.write(f"Vybrané období: {formatted_date_from} - {formatted_date_to}")
 
 # 3) Filtr aktivity
 #activity_list = ["Vše"]
