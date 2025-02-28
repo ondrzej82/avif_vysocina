@@ -231,14 +231,11 @@ if not filtered_data.empty:
         st.write("### Počet jedinců podle měsíců")
         st.plotly_chart(fig2)
 
-# ------------------
-# TABULKA VÝSLEDKŮ
-# ------------------
-st.write(f"### Pozorování druhu: {selected_species}")
-filtered_data_display = filtered_data.copy()
+# Výpis dat s podporou stránkování
+st.write(f"### Pozorování druhu: {selected_year}")
+filtered_data_display = df.copy()
 filtered_data_display["Počet"] = filtered_data_display["Počet"].apply(lambda x: 'x' if pd.isna(x) or x == '' else int(x))
 filtered_data_display["Datum"] = filtered_data_display["Datum"].apply(lambda x: x.strftime('%d. %m. %Y') if pd.notna(x) else '')
-st.write(filtered_data_display[["Datum", "Místo pozorování", "Počet", "Odkaz"]].to_html(escape=False), unsafe_allow_html=True)
 
 # Nastavení stránkování
 page_size = 20
