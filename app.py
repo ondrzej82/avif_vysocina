@@ -126,10 +126,6 @@ if selected_species == "Vyber":
 elif selected_species != "Vše":
     filtered_data = filtered_data[filtered_data[species_column] == selected_species]
 
-# A nakonec podle aktivity
-if activity_column in filtered_data.columns:
-    if selected_activity != "Vše":
-        filtered_data = filtered_data[filtered_data[activity_column] == selected_activity]
 
 # ------------------
 # GRAF 1: Počet pozorovaných druhů v jednotlivých letech
