@@ -39,13 +39,7 @@ def load_data(file):
     df["Počet"] = df["Počet"].astype(int)
     return df
 
-df = None
-if uploaded_file is None and not os.path.exists("pozorovani.csv"):
-    st.warning("Prosím nahrajte soubor CSV, než aplikace začne pracovat.")
-    st.stop()
-
-if uploaded_file is not None or os.path.exists("pozorovani.csv"):
-    df = load_data(st.session_state["file_path"])
+#df = None
 
 
 # ------------------
