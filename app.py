@@ -14,16 +14,24 @@ import os
 # -------------------------
 st.set_page_config(page_title="Avif statistika", layout="wide")
 
-if os.path.exists(FILE_PATH):
-    st.session_state["file_path"] = FILE_PATH
-else:
-    st.session_state["file_path"] = "pozorovani.csv"
+FILE_PATH = "uploaded_file.csv"
 
+# Zkontrolujeme, zda soubor existuje, a nastavíme výchozí cestu v session_state
+if "file_path" not in st.session_state:
+    if os.path.exists(FILE_PATH):
+        st.session_state["file_path"] = FILE_PATH
+    else:
+        st.session_state["file_path"] = "pozorovani.csv"
+
+# Uploader pro soubor
 uploaded_file = st.file_uploader("Nahrajte soubor CSV", type=["csv"])
 
 if uploaded_file is not None:
+    # Uložíme soubor na disk
     with open(FILE_PATH, "wb") as f:
         f.write(uploaded_file.getbuffer())
+
+    # Aktualizujeme session_state, aby byl soubor dostupný pro všechny
     st.session_state["file_path"] = FILE_PATH
     st.success("Soubor byl úspěšně nahrán a uložen.")
 
