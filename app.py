@@ -15,16 +15,18 @@ import os
 st.set_page_config(page_title="Avif statistika", layout="wide")
 
                    
-# Zajištění individuálního souboru CSV pro každého uživatele
-if "file_path" not in st.session_state:
-    st.session_state["file_path"] = "pozorovani.csv"
+
+# Zajištění individuálního souboru CSV napořád
+
+FILE_PATH = "uploaded_file.csv"
 
 uploaded_file = st.file_uploader("Nahrajte soubor CSV", type=["csv"])
 
 if uploaded_file is not None:
-    file_path = uploaded_file
-else:
-    file_path = "pozorovani.csv"
+    # Uložíme soubor na disk
+    with open(FILE_PATH, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+    st.success("Soubor byl úspěšně nahrán a uložen.")
 
 @st.cache_data
 def load_data(file):
@@ -53,12 +55,12 @@ def load_data(file):
     return df
 
 df = None
-if uploaded_file is None and not os.path.exists("pozorovani.csv"):
+if not os.path.exists(FILE_PATH):
     st.warning("Prosím nahrajte soubor CSV, než aplikace začne pracovat.")
     st.stop()
 
-if uploaded_file is not None or os.path.exists("pozorovani.csv"):
-    df = load_data(file_path)
+df = load_data(FILE_PATH)
+
 
 # ------------------
 # Checkboxy pro zobrazení / skrytí grafů a map (nahoře na stránce)
