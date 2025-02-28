@@ -24,8 +24,8 @@ if "df" not in st.session_state:
         st.warning("Prosím nahrajte soubor CSV, než aplikace začne pracovat.")
         st.stop()
 df = st.session_state.df
-else:
-    file_path = "pozorovani.csv"
+#else:
+#    file_path = "pozorovani.csv"
 
 @st.cache_data
 def load_data(file):
