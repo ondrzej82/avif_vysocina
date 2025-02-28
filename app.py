@@ -14,7 +14,8 @@ import os
 # -------------------------
 st.set_page_config(page_title="Avif statistika", layout="wide")
 
-                   
+uploaded_file = st.file_uploader("Nahrajte soubor CSV", type=["csv"])
+
 if "df" not in st.session_state:
     if uploaded_file is not None:
         st.session_state.df = load_data(uploaded_file)
