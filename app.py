@@ -14,19 +14,15 @@ import os
 # -------------------------
 st.set_page_config(page_title="Avif statistika", layout="wide")
 
+if "file_path" not in st.session_state:
+    st.session_state["file_path"] = "pozorovani.csv"
+
 uploaded_file = st.file_uploader("Nahrajte soubor CSV", type=["csv"])
 
-if "df" not in st.session_state:
-    if uploaded_file is not None:
-        st.session_state.df = load_data(uploaded_file)
-    elif os.path.exists("pozorovani.csv"):
-        st.session_state.df = load_data("pozorovani.csv")
-    else:
-        st.warning("Prosím nahrajte soubor CSV, než aplikace začne pracovat.")
-        st.stop()
-df = st.session_state.df
-#else:
-#    file_path = "pozorovani.csv"
+if uploaded_file is not None:
+    file_path = uploaded_file
+else:
+    file_path = "pozorovani.csv"
 
 @st.cache_data
 def load_data(file):
