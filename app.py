@@ -18,6 +18,7 @@ FILE_PATH = "uploaded_file.csv"
 FILE_ID = "1rg_3k3OKMJ2C_DkSmFxKfiYMLDRpuyEp"
 FILE_URL = f"https://drive.google.com/uc?id={FILE_ID}"
 
+
 # -------------------------
 # Funkce pro načtení dat z CSV
 # -------------------------
@@ -54,26 +55,13 @@ def load_data(file):
 def load_data_from_drive():
     import gdown
     if not os.path.exists(FILE_PATH):
-        st.info("Stahuji soubor z Google Drive...")
         gdown.download(FILE_URL, FILE_PATH, quiet=False)
-        st.success("Soubor byl stažen z Google Drive.")
     return load_data(FILE_PATH)
 
 # -------------------------
-# Uživatel může soubor nahrát ručně nebo se použije soubor z Google Drive
+# Načtení dat z Google Drive
 # -------------------------
-uploaded_file = st.file_uploader("Nahrajte soubor CSV", type=["csv"])
-
-if uploaded_file is not None:
-    # Uložíme soubor na disk a načteme data
-    with open(FILE_PATH, "wb") as f:
-        f.write(uploaded_file.getbuffer())
-    st.success("Soubor byl úspěšně nahrán a uložen.")
-    df = load_data(FILE_PATH)
-else:
-    # Pokud není nahrán, pokusíme se načíst data z Google Drive (s cache)
-    df = load_data_from_drive()
-
+df = load_data_from_drive()
 
 # ------------------
 # Checkboxy pro zobrazení / skrytí grafů a map (nahoře na stránce)
