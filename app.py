@@ -159,17 +159,26 @@ if selected_species not in ["Vyber", "Vše"]:
         st.write(f"### Počet pozorování druhu {selected_species} v jednotlivých letech")
         st.plotly_chart(fig_species_yearly)
 
-# ------------------
-# GRAF 3: 10 nejčastěji pozorovaných druhů (koláč)
-# ------------------
+# -------------------------
+# SEZNAM: 10 nejčastěji pozorovaných druhů s procenty
+# -------------------------
 filtered_pie_data = df[(df["Datum"].dt.date >= date_from) & (df["Datum"].dt.date <= date_to)]
 top_species = filtered_pie_data[species_column].value_counts().nlargest(10).reset_index()
 top_species.columns = ["Druh", "Počet pozorování"]
-fig_pie = px.pie(top_species, names="Druh", values="Počet pozorování", title="Podíl 10 nejčastějších druhů", hole=0.3)
 
 if show_pie_top_species:
     st.write("### 10 nejčastěji pozorovaných druhů")
-    st.plotly_chart(fig_pie)
+    # Celkový počet pozorování v daném rozsahu
+    total_obs = filtered_pie_data[species_column].count()
+    # Přidáme sloupec s procenty
+    top_species["Procento"] = (top_species["Počet pozorování"] / total_obs * 100).round(1)
+    
+    # Vytvoříme textový výpis, kde u každého druhu zobrazíme název a procentuální podíl v závorce
+    output_text = ""
+    for i, row in top_species.iterrows():
+        output_text += f"{i+1}. {row['Druh']} ({row['Procento']}%)\n"
+    
+    st.markdown(output_text)
 
 # ------------------
 # MAPA S BODY
@@ -233,6 +242,8 @@ if not filtered_data.empty:
 #        st.write("### Počet jedinců podle měsíců")
 #        st.plotly_chart(fig2)
 
+
+# Výpis dat s podporou stránkování
 st.write(f"### Pozorování druhu: {selected_species}")
 filtered_data_display = filtered_data.copy()
 filtered_data_display["Počet"] = filtered_data_display["Počet"].apply(lambda x: 'x' if pd.isna(x) or x == '' else int(x))
