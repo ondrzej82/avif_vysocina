@@ -82,7 +82,7 @@ with c2:
     show_pie_top_species = st.checkbox("Koláč: Nejčastější druhy", value=True)
     show_bar_monthly_obs = st.checkbox("Graf: Počty pozorování podle měsíců", value=True)
 with c3:
-    show_bar_monthly_count = st.checkbox("Graf: Počty jedinců podle měsíců", value=True)
+#    show_bar_monthly_count = st.checkbox("Graf: Počty jedinců podle měsíců", value=True)
     show_map_markers = st.checkbox("Mapa s body pozorování", value=True)
     show_map_heat = st.checkbox("Heatmapa pozorování", value=True)
 
