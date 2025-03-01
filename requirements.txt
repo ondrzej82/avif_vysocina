@@ -4,4 +4,3 @@ plotly
 folium
 streamlit-folium
 gdown
-locale
