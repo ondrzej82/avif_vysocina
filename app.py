@@ -1,3 +1,12 @@
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+import folium
+from streamlit_folium import folium_static
+from folium.plugins import HeatMap
+from datetime import datetime
+import os
+
 # Nastavení "wide" layoutu a titulku aplikace
 st.set_page_config(page_title="Avif statistika", layout="wide")
 
