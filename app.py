@@ -1,72 +1,69 @@
-import requests
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-import folium
-from streamlit_folium import folium_static
-from folium.plugins import HeatMap
-from datetime import datetime
-from io import StringIO
-
-# Cesta k souboru
-import os
-
-# -------------------------
 # Nastavení "wide" layoutu a titulku aplikace
-# -------------------------
 st.set_page_config(page_title="Avif statistika", layout="wide")
 
-                   
-# 🔹 Přímý odkaz na soubor na Google Drive (vyměň ID souboru!)
-GOOGLE_DRIVE_FILE_ID = "1rg_3k3OKMJ2C_DkSmFxKfiYMLDRpuyEp"
-GOOGLE_DRIVE_URL = f"https://drive.google.com/uc?export=download&id=1rg_3k3OKMJ2C_DkSmFxKfiYMLDRpuyEp"
+# -------------------------
+# Konfigurace souboru a Google Drive
+# -------------------------
+FILE_PATH = "uploaded_file.csv"
+# Zadejte své Google Drive file ID (část URL za "id=")
+FILE_ID = "1rg_3k3OKMJ2C_DkSmFxKfiYMLDRpuyEp"
+FILE_URL = f"https://drive.google.com/uc?id={1rg_3k3OKMJ2C_DkSmFxKfiYMLDRpuyEp}"
 
+# -------------------------
+# Funkce pro načtení dat z CSV
+# -------------------------
+@st.cache_data
+def load_data(file):
+    try:
+        df = pd.read_csv(file, delimiter=';', encoding='utf-8-sig')
+        if df.empty:
+            st.error("Nahraný soubor je prázdný. Nahrajte platný CSV soubor.")
+            st.stop()
+    except pd.errors.EmptyDataError:
+        st.error("Soubor je prázdný nebo neplatný. Nahrajte prosím platný CSV soubor.")
+        st.stop()
+    df.rename(columns={
+        "Date": "Datum",
+        "SiteName": "Místo pozorování",
+        "CountMin": "Počet",
+        "ItemLink": "Odkaz",
+        "Latitude": "Zeměpisná šířka",
+        "Longitude": "Zeměpisná délka"
+    }, inplace=True)
+    df["Datum"] = pd.to_datetime(df["Datum"], format='%Y-%m-%d', errors='coerce')
+    df = df.reset_index(drop=True)
+    df["Odkaz"] = df["Odkaz"].apply(lambda x: f'<a href="{x}" target="_blank">link</a>' if pd.notna(x) else "")
+    df["Počet"].fillna(1, inplace=True)
+    df["Místo pozorování"].fillna("", inplace=True)
+    df["Počet"] = df["Počet"].astype(int)
+    return df
+
+# -------------------------
+# Funkce pro stažení souboru z Google Drive (s využitím cache)
+# -------------------------
 @st.cache_data
 def load_data_from_drive():
-    """Načte CSV soubor přímo z Google Drive."""
-    try:
-        response = requests.get(GOOGLE_DRIVE_URL)
-        response.raise_for_status()  # Ověří, zda je soubor dostupný
-        csv_data = StringIO(response.text)
-        df = pd.read_csv(csv_data, delimiter=";", encoding="utf-8-sig")
-        return df
-    except requests.exceptions.RequestException as e:
-        st.error(f"Chyba při načítání dat: {e}")
-        return pd.DataFrame()  # Při chybě vrátíme prázdný DataFrame
+    import gdown
+    if not os.path.exists(FILE_PATH):
+        st.info("Stahuji soubor z Google Drive...")
+        gdown.download(FILE_URL, FILE_PATH, quiet=False)
+        st.success("Soubor byl stažen z Google Drive.")
+    return load_data(FILE_PATH)
 
-# 🔹 Uživatelské nahrání souboru
-uploaded_file = st.file_uploader("Nahrajte nový soubor CSV", type=["csv"])
+# -------------------------
+# Uživatel může soubor nahrát ručně nebo se použije soubor z Google Drive
+# -------------------------
+uploaded_file = st.file_uploader("Nahrajte soubor CSV", type=["csv"])
 
 if uploaded_file is not None:
-    st.warning("Uložit nahraný soubor do Google Drive musíte manuálně.")
-    df = pd.read_csv(uploaded_file, delimiter=";", encoding="utf-8-sig")
+    # Uložíme soubor na disk a načteme data
+    with open(FILE_PATH, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+    st.success("Soubor byl úspěšně nahrán a uložen.")
+    df = load_data(FILE_PATH)
 else:
+    # Pokud není nahrán, pokusíme se načíst data z Google Drive (s cache)
     df = load_data_from_drive()
-
-if df.empty:
-    st.warning("Nepodařilo se načíst data. Zkontrolujte odkaz na soubor Google Drive.")
-else:
-    st.success("Data byla úspěšně načtena!")
-
-# 🔹 Zpracování dat
-df.rename(columns={
-    "Date": "Datum",
-    "SiteName": "Místo pozorování",
-    "CountMin": "Počet",
-    "ItemLink": "Odkaz",
-    "Latitude": "Zeměpisná šířka",
-    "Longitude": "Zeměpisná délka"
-}, inplace=True)
-
-df["Datum"] = pd.to_datetime(df["Datum"], format='%Y-%m-%d', errors='coerce')
-df = df.reset_index(drop=True)
-df["Odkaz"] = df["Odkaz"].apply(lambda x: f'<a href="{x}" target="_blank">link</a>' if pd.notna(x) else "")
-df["Počet"].fillna(1, inplace=True)
-df["Místo pozorování"].fillna("", inplace=True)
-df["Počet"] = df["Počet"].astype(int)
-
-# 🔹 Výstup dat v aplikaci
-#st.write(df.head())
 
 
 # ------------------
