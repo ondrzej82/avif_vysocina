@@ -252,10 +252,10 @@ st.write(f"### Pozorování druhu: {selected_species}")
 filtered_data_display = filtered_data.copy()
 # Ořízneme text v sloupci "Místo pozorování" na maximálně 50 znaků
 filtered_data_display["Místo pozorování"] = filtered_data_display["Místo pozorování"].apply(
-    lambda x: (x[:50] + "...") if isinstance(x, str) and len(x) > 50 else x
+    lambda x: (x[:50] + "...") if isinstance(x, str) and len(x) > 50 else x)
 # Ořízneme text v sloupci "Pozorovatel" na maximálně 50 znaků
 filtered_data_display["Pozorovatel"] = filtered_data_display["Pozorovatel"].apply(
-    lambda x: (x[:50] + "...") if isinstance(x, str) and len(x) > 50 else x
+    lambda x: (x[:50] + "...") if isinstance(x, str) and len(x) > 50 else x)
  
 filtered_data_display["Počet"] = filtered_data_display["Počet"].apply(lambda x: 'x' if pd.isna(x) or x == '' else int(x))
 filtered_data_display["Datum"] = filtered_data_display["Datum"].apply(lambda x: x.strftime('%d. %m. %Y') if pd.notna(x) else '')
