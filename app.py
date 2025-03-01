@@ -6,6 +6,7 @@ from streamlit_folium import folium_static
 from folium.plugins import HeatMap
 from datetime import datetime
 import os
+import math
 
 # Nastavení "wide" layoutu a titulku aplikace
 st.set_page_config(page_title="Avif statistika", layout="wide")
@@ -232,9 +233,29 @@ if not filtered_data.empty:
         st.write("### Počet jedinců podle měsíců")
         st.plotly_chart(fig2)
 
-# Výpis dat s podporou stránkování
-st.write(f"### Pozorování druhu: {selected_species}")
+# Předpokládáme, že filtered_data_display již existuje a obsahuje data k zobrazení.
 filtered_data_display = filtered_data.copy()
 filtered_data_display["Počet"] = filtered_data_display["Počet"].apply(lambda x: 'x' if pd.isna(x) or x == '' else int(x))
 filtered_data_display["Datum"] = filtered_data_display["Datum"].apply(lambda x: x.strftime('%d. %m. %Y') if pd.notna(x) else '')
-st.write(filtered_data_display[["Datum", "Místo pozorování", "Počet", "Odkaz"]].to_html(escape=False), unsafe_allow_html=True)
+
+# Nastavení počtu záznamů na stránku
+PAGE_SIZE = 20
+
+# Výpočet celkového počtu záznamů a stránek
+total_records = len(filtered_data_display)
+total_pages = math.ceil(total_records / PAGE_SIZE)
+
+st.write(f"### Pozorování druhu: {selected_species}")
+
+if total_records > 0:
+    # Uživatel si může vybrat aktuální stránku
+    current_page = st.number_input("Stránka", min_value=1, max_value=total_pages, value=1, step=1)
+    start_idx = (current_page - 1) * PAGE_SIZE
+    end_idx = start_idx + PAGE_SIZE
+    st.write(f"Zobrazuji záznamy {start_idx+1} až {min(end_idx, total_records)} z celkem {total_records}")
+    
+    # Zobrazení dané části tabulky
+    paginated_data = filtered_data_display.iloc[start_idx:end_idx]
+    st.write(paginated_data[["Datum", "Místo pozorování", "Počet", "Odkaz"]].to_html(escape=False), unsafe_allow_html=True)
+else:
+    st.write("Žádná data ke zobrazení.")
