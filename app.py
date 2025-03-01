@@ -99,14 +99,6 @@ if df is not None and not df.empty and species_column in df.columns:
     species_list = ["Vyber"] + sorted(set(df[species_column].dropna().unique()))
 selected_species = st.selectbox("Vyber druh:", species_list)
 
-try:
-    locale.setlocale(locale.LC_TIME, 'cs_CZ.UTF-8')
-except locale.Error:
-    try:
-        locale.setlocale(locale.LC_TIME, 'cs_CZ')
-    except locale.Error:
-        # Pokud česká lokalizace není dostupná, zůstane systémové nastavení
-        pass
 
 # 2) Filtr data
 date_min = df["Datum"].min().date() if df is not None and not df.empty else datetime.today().date()
@@ -124,11 +116,6 @@ if selected_year == "Vlastní rozsah":
 else:
     date_from = datetime(selected_year, 1, 1).date()
     date_to = datetime(selected_year, 12, 31).date()
-
-# V tabulce zobrazujeme datum ve formátu DD. MM. YYYY
-filtered_data_display = filtered_data.copy()
-filtered_data_display["Datum"] = filtered_data_display["Datum"].apply(
-    lambda x: x.strftime('%d. %m. %Y') if pd.notna(x) else '')
 
 # 3) Filtr aktivity
 #activity_list = ["Vše"]
