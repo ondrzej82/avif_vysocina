@@ -66,7 +66,7 @@ df["Místo pozorování"].fillna("", inplace=True)
 df["Počet"] = df["Počet"].astype(int)
 
 # 🔹 Výstup dat v aplikaci
-st.write(df.head())
+#st.write(df.head())
 
 
 # ------------------
