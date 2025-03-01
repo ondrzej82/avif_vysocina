@@ -238,24 +238,72 @@ filtered_data_display = filtered_data.copy()
 filtered_data_display["Počet"] = filtered_data_display["Počet"].apply(lambda x: 'x' if pd.isna(x) or x == '' else int(x))
 filtered_data_display["Datum"] = filtered_data_display["Datum"].apply(lambda x: x.strftime('%d. %m. %Y') if pd.notna(x) else '')
 
-# Nastavení počtu záznamů na stránku
-PAGE_SIZE = 20
 
-# Výpočet celkového počtu záznamů a stránek
+PAGE_SIZE = 20  # Počet záznamů na stránku
 total_records = len(filtered_data_display)
 total_pages = math.ceil(total_records / PAGE_SIZE)
 
-st.write(f"### Pozorování druhu: {selected_species}")
+# Pokud ještě není nastavena aktuální stránka, nastavíme ji na 1
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = 1
 
-if total_records > 0:
-    # Uživatel si může vybrat aktuální stránku
-    current_page = st.number_input("Stránka", min_value=1, max_value=total_pages, value=1, step=1)
-    start_idx = (current_page - 1) * PAGE_SIZE
-    end_idx = start_idx + PAGE_SIZE
-    st.write(f"Zobrazuji záznamy {start_idx+1} až {min(end_idx, total_records)} z celkem {total_records}")
-    
-    # Zobrazení dané části tabulky
-    paginated_data = filtered_data_display.iloc[start_idx:end_idx]
-    st.write(paginated_data[["Datum", "Místo pozorování", "Počet", "Odkaz"]].to_html(escape=False), unsafe_allow_html=True)
-else:
-    st.write("Žádná data ke zobrazení.")
+current_page = st.session_state.current_page
+
+# Vypočítáme indexy pro slicing dat
+start_idx = (current_page - 1) * PAGE_SIZE
+end_idx = start_idx + PAGE_SIZE
+
+st.write(f"Zobrazuji záznamy {start_idx + 1} až {min(end_idx, total_records)} z celkem {total_records}")
+paginated_data = filtered_data_display.iloc[start_idx:end_idx]
+st.write(paginated_data[["Datum", "Místo pozorování", "Počet", "Odkaz"]].to_html(escape=False), unsafe_allow_html=True)
+
+# Funkce, která vrací seznam čísel stránek k zobrazení s "..." pro rozsáhlý počet stránek
+def get_pages_to_display(current_page, total_pages):
+    if total_pages <= 10:
+        return list(range(1, total_pages + 1))
+    else:
+        pages = [1]
+        if current_page > 4:
+            pages.append("...")
+        # Zobrazíme aktuální stránku a dvě před ní a dvě za ní
+        start = max(2, current_page - 2)
+        end = min(total_pages - 1, current_page + 2)
+        pages.extend(range(start, end + 1))
+        if current_page < total_pages - 3:
+            pages.append("...")
+        pages.append(total_pages)
+        return pages
+
+pages_to_display = get_pages_to_display(current_page, total_pages)
+
+# Vykreslení ovládacích tlačítek pro stránkování
+col_nav = st.columns(7)  # Použijeme několik sloupců pro tlačítka
+
+# "První stránka" tlačítko
+if col_nav[0].button("<<", key="first"):
+    st.session_state.current_page = 1
+
+# "Předchozí stránka" tlačítko
+if col_nav[1].button("<", key="prev"):
+    st.session_state.current_page = max(1, current_page - 1)
+
+# Pro číselné odkazy využijeme dynamicky vytvořených sloupců
+page_cols = st.columns(len(pages_to_display))
+for idx, p in enumerate(pages_to_display):
+    if p == "...":
+        page_cols[idx].write("...")
+    else:
+        # Označíme aktuální stránku tučně
+        if p == current_page:
+            page_cols[idx].markdown(f"**{p}**")
+        else:
+            if page_cols[idx].button(str(p), key=f"page_{p}"):
+                st.session_state.current_page = p
+
+# "Následující stránka" tlačítko
+if col_nav[5].button(">", key="next"):
+    st.session_state.current_page = min(total_pages, current_page + 1)
+
+# "Poslední stránka" tlačítko
+if col_nav[6].button(">>", key="last"):
+    st.session_state.current_page = total_pages
