@@ -35,6 +35,8 @@ def load_data(file):
         st.stop()
     df.rename(columns={
         "Date": "Datum",
+        "Observers": "Pozorovatel",
+        "Municipality": "Město",
         "SiteName": "Místo pozorování",
         "CountMin": "Počet",
         "ItemLink": "Odkaz",
@@ -250,4 +252,4 @@ filtered_data_display["Počet"] = filtered_data_display["Počet"].apply(lambda x
 filtered_data_display["Datum"] = filtered_data_display["Datum"].apply(lambda x: x.strftime('%d. %m. %Y') if pd.notna(x) else '')
 # Omezíme zobrazení na prvních 100 řádků
 limited_data = filtered_data_display.iloc[:100]
-st.write(limited_data[["Datum", "Místo pozorování", "Počet", "Odkaz"]].to_html(escape=False), unsafe_allow_html=True)
+st.write(limited_data[["Datum", "Místo pozorování", "Město", "Pozorovatel", "Počet", "Odkaz"]].to_html(escape=False), unsafe_allow_html=True)
