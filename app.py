@@ -7,7 +7,7 @@ st.set_page_config(page_title="Avif statistika", layout="wide")
 FILE_PATH = "uploaded_file.csv"
 # Zadejte své Google Drive file ID (část URL za "id=")
 FILE_ID = "1rg_3k3OKMJ2C_DkSmFxKfiYMLDRpuyEp"
-FILE_URL = f"https://drive.google.com/uc?id={1rg_3k3OKMJ2C_DkSmFxKfiYMLDRpuyEp}"
+FILE_URL = f"https://drive.google.com/uc?id={FILE_ID}"
 
 # -------------------------
 # Funkce pro načtení dat z CSV
