@@ -39,6 +39,7 @@ def load_data(file):
         "Municipality": "Město",
         "SiteName": "Místo pozorování",
         "CountMin": "Počet",
+        "Count": "Počet1",
         "ItemLink": "Odkaz",
         "Latitude": "Zeměpisná šířka",
         "Longitude": "Zeměpisná délka"
@@ -47,6 +48,7 @@ def load_data(file):
     df = df.reset_index(drop=True)
     df["Odkaz"] = df["Odkaz"].apply(lambda x: f'<a href="{x}" target="_blank">link</a>' if pd.notna(x) else "")
     df["Počet"].fillna(1, inplace=True)
+    df["Počet1"].fillna("", inplace=True)
     df["Město"].fillna("", inplace=True)
     df["Pozorovatel"].fillna("", inplace=True)
     df["Místo pozorování"].fillna("", inplace=True)
@@ -261,4 +263,4 @@ filtered_data_display["Počet"] = filtered_data_display["Počet"].apply(lambda x
 filtered_data_display["Datum"] = filtered_data_display["Datum"].apply(lambda x: x.strftime('%d. %m. %Y') if pd.notna(x) else '')
 # Omezíme zobrazení na prvních 100 řádků
 limited_data = filtered_data_display.iloc[:100]
-st.write(limited_data[["Datum", "Místo pozorování", "Město", "Pozorovatel", "Počet", "Odkaz"]].to_html(index=False, escape=False), unsafe_allow_html=True)
+st.write(limited_data[["Datum", "Místo pozorování", "Město", "Pozorovatel", "Počet1", "Odkaz"]].to_html(index=False, escape=False), unsafe_allow_html=True)
