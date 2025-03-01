@@ -47,6 +47,8 @@ def load_data(file):
     df = df.reset_index(drop=True)
     df["Odkaz"] = df["Odkaz"].apply(lambda x: f'<a href="{x}" target="_blank">link</a>' if pd.notna(x) else "")
     df["Počet"].fillna(1, inplace=True)
+    df["Město"].fillna("", inplace=True)
+    df["Pozorovatel"].fillna("", inplace=True)
     df["Místo pozorování"].fillna("", inplace=True)
     df["Počet"] = df["Počet"].astype(int)
     return df
