@@ -17,8 +17,8 @@ st.set_page_config(page_title="Avif statistika", layout="wide")
 
                    
 # 🔹 Přímý odkaz na soubor na Google Drive (vyměň ID souboru!)
-GOOGLE_DRIVE_FILE_ID = "1abcD1234EFG567HIJKL890MNOPQRST"
-GOOGLE_DRIVE_URL = f"https://drive.google.com/uc?export=download&id={GOOGLE_DRIVE_FILE_ID}"
+GOOGLE_DRIVE_FILE_ID = "1rg_3k3OKMJ2C_DkSmFxKfiYMLDRpuyEp"
+GOOGLE_DRIVE_URL = f"https://drive.google.com/uc?export=download&id=1rg_3k3OKMJ2C_DkSmFxKfiYMLDRpuyEp"
 
 @st.cache_data
 def load_data_from_drive():
