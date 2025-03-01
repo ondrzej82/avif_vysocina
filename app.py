@@ -218,20 +218,20 @@ if not filtered_data.empty:
     all_months_df = pd.DataFrame({"Měsíc": ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"]})
     monthly_counts = all_months_df.merge(monthly_counts, on="Měsíc", how="left").fillna(0)
     monthly_counts["Počet pozorování"] = monthly_counts["Počet pozorování"].astype(int)
-    monthly_counts["Počet jedinců"] = monthly_counts["Počet jedinců"].astype(int)
+#    monthly_counts["Počet jedinců"] = monthly_counts["Počet jedinců"].astype(int)
 
     fig1 = px.bar(monthly_counts, x="Měsíc", y="Počet pozorování", title="Počet pozorování podle měsíců", color_discrete_sequence=["blue"])
     fig1.update_yaxes(dtick=max(1, monthly_counts["Počet pozorování"].max() // 5))
-    fig2 = px.bar(monthly_counts, x="Měsíc", y="Počet jedinců", title="Počet jedinců podle měsíců", color_discrete_sequence=["red"])
-    fig2.update_yaxes(dtick=max(1, monthly_counts["Počet jedinců"].max() // 5))
+#    fig2 = px.bar(monthly_counts, x="Měsíc", y="Počet jedinců", title="Počet jedinců podle měsíců", color_discrete_sequence=["red"])
+#    fig2.update_yaxes(dtick=max(1, monthly_counts["Počet jedinců"].max() // 5))
 
     if show_bar_monthly_obs:
         st.write("### Počet pozorování podle měsíců")
         st.plotly_chart(fig1)
 
-    if show_bar_monthly_count:
-        st.write("### Počet jedinců podle měsíců")
-        st.plotly_chart(fig2)
+#    if show_bar_monthly_count:
+#        st.write("### Počet jedinců podle měsíců")
+#        st.plotly_chart(fig2)
 
 st.write(f"### Pozorování druhu: {selected_species}")
 filtered_data_display = filtered_data.copy()
