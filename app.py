@@ -128,7 +128,7 @@ else:
 # V tabulce zobrazujeme datum ve formátu DD. MM. YYYY
 filtered_data_display = filtered_data.copy()
 filtered_data_display["Datum"] = filtered_data_display["Datum"].apply(
-    lambda x: x.strftime('%d. %m. %Y') if pd.notna(x) else ''
+    lambda x: x.strftime('%d. %m. %Y') if pd.notna(x) else '')
 
 # 3) Filtr aktivity
 #activity_list = ["Vše"]
