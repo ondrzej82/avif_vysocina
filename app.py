@@ -196,7 +196,7 @@ if show_pie_top_species:
 #if not filtered_data.empty and filtered_data[["Zeměpisná šířka", "Zeměpisná délka"]].notna().all().all():
 #    map_center = [filtered_data["Zeměpisná šířka"].mean(), filtered_data["Zeměpisná délka"].mean()]
 #else:
-#    map_center = [49.8175, 15.4730]
+    map_center = [49.8175, 15.4730]
 
 #m = folium.Map(location=map_center, zoom_start=6)
 
