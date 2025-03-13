@@ -172,23 +172,23 @@ if selected_species not in ["Vyber", "Vše"]:
 # -------------------------
 # SEZNAM: 10 nejčastěji pozorovaných druhů s procenty
 # -------------------------
-filtered_pie_data = df[(df["Datum"].dt.date >= date_from) & (df["Datum"].dt.date <= date_to)]
-top_species = filtered_pie_data[species_column].value_counts().nlargest(10).reset_index()
-top_species.columns = ["Druh", "Počet pozorování"]
+#filtered_pie_data = df[(df["Datum"].dt.date >= date_from) & (df["Datum"].dt.date <= date_to)]
+#top_species = filtered_pie_data[species_column].value_counts().nlargest(10).reset_index()
+#top_species.columns = ["Druh", "Počet pozorování"]
 
-if show_pie_top_species:
-    st.write("### 10 nejčastěji pozorovaných druhů")
+#if show_pie_top_species:
+#    st.write("### 10 nejčastěji pozorovaných druhů")
     # Celkový počet pozorování v daném rozsahu
-    total_obs = filtered_pie_data[species_column].count()
+#    total_obs = filtered_pie_data[species_column].count()
     # Přidáme sloupec s procenty
-    top_species["Procento"] = (top_species["Počet pozorování"] / total_obs * 100).round(1)
+#    top_species["Procento"] = (top_species["Počet pozorování"] / total_obs * 100).round(1)
     
-    # Vytvoříme textový výpis, kde u každého druhu zobrazíme název a procentuální podíl v závorce
-    output_text = ""
-    for i, row in top_species.iterrows():
-        output_text += f"{i+1}. {row['Druh']} ({row['Procento']}%)\n"
+#    # Vytvoříme textový výpis, kde u každého druhu zobrazíme název a procentuální podíl v závorce
+#    output_text = ""
+#    for i, row in top_species.iterrows():
+#        output_text += f"{i+1}. {row['Druh']} ({row['Procento']}%)\n"
     
-    st.markdown(output_text)
+#    st.markdown(output_text)
 
 # ------------------
 # MAPA S BODY
