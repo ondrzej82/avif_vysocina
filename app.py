@@ -193,25 +193,25 @@ if show_pie_top_species:
 # ------------------
 # MAPA S BODY
 # ------------------
-if not filtered_data.empty and filtered_data[["Zeměpisná šířka", "Zeměpisná délka"]].notna().all().all():
-    map_center = [filtered_data["Zeměpisná šířka"].mean(), filtered_data["Zeměpisná délka"].mean()]
-else:
-    map_center = [49.8175, 15.4730]
+#if not filtered_data.empty and filtered_data[["Zeměpisná šířka", "Zeměpisná délka"]].notna().all().all():
+#    map_center = [filtered_data["Zeměpisná šířka"].mean(), filtered_data["Zeměpisná délka"].mean()]
+#else:
+#    map_center = [49.8175, 15.4730]
 
-m = folium.Map(location=map_center, zoom_start=6)
+#m = folium.Map(location=map_center, zoom_start=6)
 
-if not filtered_data.empty:
-    from folium.plugins import MarkerCluster
-    marker_cluster = MarkerCluster().add_to(m)
-    for _, row in filtered_data.dropna(subset=["Zeměpisná šířka", "Zeměpisná délka"]).iterrows():
-        folium.Marker(
-            location=[row["Zeměpisná šířka"], row["Zeměpisná délka"]],
-            popup=f"{row['Místo pozorování']} ({row['Počet']} jedinců)",
-        ).add_to(marker_cluster)
+#if not filtered_data.empty:
+#    from folium.plugins import MarkerCluster
+#    marker_cluster = MarkerCluster().add_to(m)
+#    for _, row in filtered_data.dropna(subset=["Zeměpisná šířka", "Zeměpisná délka"]).iterrows():
+#        folium.Marker(
+#            location=[row["Zeměpisná šířka"], row["Zeměpisná délka"]],
+#            popup=f"{row['Místo pozorování']} ({row['Počet']} jedinců)",
+#        ).add_to(marker_cluster)
 
-if show_map_markers:
-    st.write("### Mapa pozorování")
-    folium_static(m)
+#if show_map_markers:
+#    st.write("### Mapa pozorování")
+#    folium_static(m)
 
 # ------------------
 # HEATMAPA POZOROVÁNÍ
